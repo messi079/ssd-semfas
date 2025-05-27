@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Substituição de SSD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8">
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="flex flex-col items-center">
+            <div class="spinner mb-4"></div>
+            <p class="text-gray-700 text-lg font-semibold">Carregando dados...</p>
+        </div>
+    </div>
+
+    <div id="appSection" class="bg-white shadow-xl rounded-2xl p-6 w-full max-w-6xl">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">
+                Controle de Substituição de SSD
+            </h1>
+            </div>
+
+        <p id="userIdDisplay" class="text-left text-sm text-gray-600 mb-4">ID da Sessão: Carregando...</p>
+
+        <div class="flex justify-center mb-8 space-x-4">
+            <button id="tabControle" class="px-6 py-3 rounded-xl text-lg font-semibold transition-all duration-300 bg-blue-600 text-white shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                Controle de Substituições
+            </button>
+            <button id="tabGraficos" class="px-6 py-3 rounded-xl text-lg font-semibold transition-all duration-300 bg-gray-200 text-gray-800 shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+                Gráficos de Acompanhamento
+            </button>
+        </div>
+
+        <div id="sectionControle" class="tab-content">
+            <h2 class="text-2xl font-bold text-gray-800 mb-5 text-center">Registrar Nova Substituição</h2>
+            <form id="ssdForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div>
+                    <label for="unidadeId" class="block text-sm font-medium text-gray-700 mb-1">ID da Unidade/Computador</label>
+                    <input type="text" id="unidadeId" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900">
+                </div>
+                <div>
+                    <label for="modeloUnidade" class="block text-sm font-medium text-gray-700 mb-1">Modelo da Unidade (Opcional)</label>
+                    <input type="text" id="modeloUnidade" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900">
+                </div>
+                <div>
+                    <label for="capacidadeHdd" class="block text-sm font-medium text-gray-700 mb-1">Capacidade HDD Original</label>
+                    <input type="text" id="capacidadeHdd" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900" placeholder="Ex: 500GB, 1TB">
+                </div>
+                <div>
+                    <label for="capacidadeSsd" class="block text-sm font-medium text-gray-700 mb-1">Capacidade SSD Instalado</label>
+                    <input type="text" id="capacidadeSsd" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900" placeholder="Ex: 240GB, 480GB">
+                </div>
+                <div>
+                    <label for="marcaModeloSsd" class="block text-sm font-medium text-gray-700 mb-1">Marca/Modelo SSD</label>
+                    <input type="text" id="marcaModeloSsd" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900">
+                </div>
+                <div>
+                    <label for="numeroSerieSsd" class="block text-sm font-medium text-gray-700 mb-1">Número de Série SSD</label>
+                    <input type="text" id="numeroSerieSsd" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900">
+                </div>
+                <div>
+                    <label for="dataSubstituicao" class="block text-sm font-medium text-gray-700 mb-1">Data da Substituição</label>
+                    <input type="date" id="dataSubstituicao" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900">
+                </div>
+                <div>
+                    <label for="tecnicoResponsavel" class="block text-sm font-medium text-gray-700 mb-1">Técnico Responsável</label>
+                    <input type="text" id="tecnicoResponsavel" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900">
+                </div>
+                <div>
+                    <label for="statusSubstituicao" class="block text-sm font-medium text-gray-700 mb-1">Status da Substituição</label>
+                    <select id="statusSubstituicao" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900">
+                        <option value="Pendente">Pendente</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Concluída">Concluída</option>
+                        <option value="Cancelada">Cancelada</option>
+                    </select>
+                </div>
+                <div class="lg:col-span-3">
+                    <label for="observacoes" class="block text-sm font-medium text-gray-700 mb-1">Observações (Opcional)</label>
+                    <textarea id="observacoes" rows="3" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900"></textarea>
+                </div>
+                <div class="lg:col-span-3 flex justify-center">
+                    <button type="submit" class="px-8 py-3 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        Adicionar Substituição
+                    </button>
+                </div>
+            </form>
+
+            <h2 class="text-2xl font-bold text-gray-800 mb-5 text-center">Registros de Substituição</h2>
+            <div class="overflow-x-auto rounded-xl shadow-md no-scrollbar">
+                <table class="min-w-full divide-y divide-gray-200 bg-white">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Unidade</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Modelo Unidade</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">HDD Original</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SSD Instalado</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marca/Modelo SSD</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nº Série SSD</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data Subst.</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Técnico</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Observações</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ssdList" class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                </table>
+            </div>
+            <p id="noRecordsMessage" class="text-center text-gray-600 mt-4 hidden">Nenhum registro encontrado. Adicione uma nova substituição acima.</p>
+        </div>
+
+        <div id="sectionGraficos" class="tab-content hidden">
+            <h2 class="text-2xl font-bold text-gray-800 mb-5 text-center">Gráficos de Acompanhamento</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-blue-50 p-6 rounded-xl shadow-md flex flex-col items-center justify-center">
+                    <h3 class="text-xl font-semibold text-blue-800 mb-3">Progresso Geral das Substituições</h3>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
+                        <div id="progressBar" class="bg-blue-600 h-4 rounded-full transition-all duration-500" style="width: 0%;"></div>
+                    </div>
+                    <p class="text-lg font-medium text-gray-800">
+                        <span id="completedCount" class="font-bold text-blue-700">0</span> de <span class="font-bold">160</span> unidades concluídas (<span id="progressPercentage">0%</span>)
+                    </p>
+                    <p class="text-md text-gray-600 mt-1">Faltam <span id="remainingCount" class="font-bold">160</span> unidades.</p>
+                </div>
+
+                <div class="bg-purple-50 p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-semibold text-purple-800 mb-3 text-center">Distribuição por Status</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-gray-800">
+                            <span class="font-medium">Concluída:</span>
+                            <span id="statusCompleted" class="font-bold text-green-600">0</span>
+                        </div>
+                        <div class="flex justify-between items-center text-gray-800">
+                            <span class="font-medium">Pendente:</span>
+                            <span id="statusPending" class="font-bold text-yellow-600">0</span>
+                        </div>
+                        <div class="flex justify-between items-center text-gray-800">
+                            <span class="font-medium">Em Andamento:</span>
+                            <span id="statusInProgress" class="font-bold text-blue-600">0</span>
+                        </div>
+                        <div class="flex justify-between items-center text-gray-800">
+                            <span class="font-medium">Cancelada:</span>
+                            <span id="statusCancelled" class="font-bold text-red-600">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Visão Geral por Status</h3>
+                <div class="flex flex-col space-y-4">
+                    <div class="flex items-center">
+                        <span class="w-24 text-right pr-4 font-medium text-gray-700">Concluída:</span>
+                        <div class="flex-1 bg-green-200 rounded-full h-8 flex items-center overflow-hidden">
+                            <div id="barCompleted" class="bg-green-600 h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2 text-white text-sm font-bold" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-24 text-right pr-4 font-medium text-gray-700">Pendente:</span>
+                        <div class="flex-1 bg-yellow-200 rounded-full h-8 flex items-center overflow-hidden">
+                            <div id="barPending" class="bg-yellow-600 h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2 text-white text-sm font-bold" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-24 text-right pr-4 font-medium text-gray-700">Em Andamento:</span>
+                        <div class="flex-1 bg-blue-200 rounded-full h-8 flex items-center overflow-hidden">
+                            <div id="barInProgress" class="bg-blue-600 h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2 text-white text-sm font-bold" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-24 text-right pr-4 font-medium text-gray-700">Cancelada:</span>
+                        <div class="flex-1 bg-red-200 rounded-full h-8 flex items-center overflow-hidden">
+                            <div id="barCancelled" class="bg-red-600 h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2 text-white text-sm font-bold" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="messageModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+            <p id="modalMessage" class="text-lg font-semibold text-gray-800 mb-4"></p>
+            <div id="modalButtonsContainer" class="flex justify-center space-x-3">
+                </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/script.js"></script>
+</body>
+</html>
